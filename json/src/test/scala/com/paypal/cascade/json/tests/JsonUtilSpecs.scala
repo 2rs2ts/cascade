@@ -53,6 +53,7 @@ class JsonUtilSpecs
     a Map[String, List[List[String]]]                                        ${Maps.StringToListListString().ok}
     a Map[String, Map[String, String]]                                       ${Maps.StringToMapStringString().ok}
     a List[Option[String]]                                                   ${Lists.ListOption().ok}
+    a Map[String, String] with null values                                   ${Maps.StringToNull().ok}
 
   JsonUtil should serialize and deserialize case classes, such as
     a case class containing a single data member                             ${CaseClasses.OneMember().ok}
@@ -206,6 +207,17 @@ class JsonUtilSpecs
           (from.get(k) must beSome.like { case m =>
             m must havePair(k1 -> v1)
           })
+      }
+    }
+
+    case class StringToNull() {
+      def ok = forAll(genJsonString) { k =>
+        val to = toJson(Map(k -> null)).get
+        val from = fromJson[Map[String, String]](to).get
+
+        // string interpolation highlighting in triple-quoted strings doesn't render well in IntelliJ
+        (to must beEqualTo("""{"%s":null}""".format(k))) and
+          (from must havePair(k -> null))
       }
     }
   }
