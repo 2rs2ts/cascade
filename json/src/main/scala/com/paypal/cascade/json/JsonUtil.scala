@@ -46,6 +46,8 @@ object JsonUtil {
   mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
   mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
   mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+  mapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+  mapper.enable(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS)
 
   /**
    * Convert an object to a JSON string representation.
